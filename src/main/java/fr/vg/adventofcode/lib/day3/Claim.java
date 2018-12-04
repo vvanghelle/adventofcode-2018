@@ -6,17 +6,35 @@ public class Claim {
 
     public final String initialReprensentation;
 
-    public long id;
+    public final long id;
 
-    public long offsetLeft;
+    public final long offsetLeft;
 
-    public long offsetTop;
+    public final long offsetTop;
 
-    public long width;
+    public final long width;
 
-    public long height;
+    public final long height;
 
-    private long[][] values;
+    public final long[][] values;
+
+    private Claim (long[][] values) {
+        this.initialReprensentation = null;
+        this.id = 0;
+        this.offsetLeft = 0;
+        this.offsetTop = 0;
+        this.width = 0;
+        this.height = 0;
+        this.values  = new long[FABRIC_LENGTH][];
+
+        //copy values
+        for (int i = 0; i < FABRIC_LENGTH; i++) {
+            this.values[i] = new long[FABRIC_LENGTH];
+            for (int j = 0; j < FABRIC_LENGTH; j++) {
+                this.values[i][j] = values[i][j];
+            }
+        }
+    }
 
     public Claim(String claimRepresentation) {
         // claimRepresentation = #123 @ 3,2: 5x4
@@ -27,10 +45,8 @@ public class Claim {
         this.offsetTop = Long.valueOf(claimsInfo[2].split(",")[1].substring(0, claimsInfo[2].split(",")[1].length() - 1));
         this.width = Long.valueOf(claimsInfo[3].split("x")[0]);
         this.height = Long.valueOf(claimsInfo[3].split("x")[1]);
-        this.initValues();
-    }
 
-    private void initValues() {
+        //init values
         this.values = new long[FABRIC_LENGTH][];
         for (int i = 0; i < FABRIC_LENGTH; i++) {
             this.values[i] = new long[FABRIC_LENGTH];
@@ -61,8 +77,8 @@ public class Claim {
         return sb.toString();
     }
 
-    public Claim clone() {
-        return new Claim(this.initialReprensentation);
+    public Claim cloneForResult() {
+        return new Claim(this.values);
     }
 
     public Claim merge(Claim merging) {
