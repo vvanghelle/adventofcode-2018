@@ -1,18 +1,20 @@
 package fr.vg.adventofcode.lib;
 
-import java.util.Arrays;
+import java.security.cert.CollectionCertStoreParameters;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.vg.adventofcode.lib.day3.Claim.FABRIC_LENGTH;
 
 public class Day3 {
 
-    public long[][] buildMap(Stream<String> inputs) {
-        long[][] values = new long[FABRIC_LENGTH][];
+    public List<String>[][] buildMap(Stream<String> inputs) {
+        List<String>[][] values = new ArrayList[FABRIC_LENGTH][];
         for (int i = 0; i < FABRIC_LENGTH; i++) {
-            values[i] = new long[FABRIC_LENGTH];
+            values[i] = new ArrayList[FABRIC_LENGTH];
             for (int j = 0; j < FABRIC_LENGTH; j++) {
-                values[i][j] = 0;
+                values[i][j] = new ArrayList<>();
             }
         }
 
@@ -24,7 +26,7 @@ public class Day3 {
             int height = Integer.valueOf(claimsInfo[3].split("x")[1]);
             for (int i = offsetLeft; i< offsetLeft + width; i++){
                 for (int j = offsetTop; j< offsetTop + height; j++){
-                    values[i][j] += 1;
+                    values[i][j].add(claimsInfo[0].substring(1));
                 }
             }
         });
@@ -33,12 +35,33 @@ public class Day3 {
     }
 
     public long nbInchSquareInConflict(Stream<String> inputs) {
-        long[][] values = buildMap(inputs);
+        List<String>[][] values = buildMap(inputs);
 
         return Arrays.stream(values)
-                .map(arr -> Arrays.stream(arr).filter(x -> x > 1).count())
+                .map(arr -> Arrays.stream(arr).filter(x -> x.size() > 1).count())
                 .mapToLong(i -> i)
                 .sum();
+    }
+
+    public String findClaimWithoutConflict(Stream<String> inputs) {
+        List<String>[][] values = buildMap(inputs);
+        Set<String> claimsInConflict = Arrays.stream(values)
+                .map(arr -> Arrays.stream(arr)
+                        .filter(x -> x.size() > 1)
+                        .flatMap(List::stream)
+                        .collect(Collectors.toSet()))
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+
+        Set<String> result = Arrays.stream(values)
+                .map(arr -> Arrays.stream(arr)
+                        .filter(x -> x.size() == 1 && !claimsInConflict.contains(x.get(0)))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toSet()))
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+
+        return result.isEmpty() ? null : result.iterator().next();
     }
 
 }

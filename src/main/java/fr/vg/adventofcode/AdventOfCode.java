@@ -6,7 +6,6 @@ import fr.vg.adventofcode.lib.Day3;
 import fr.vg.adventofcode.lib.Puzzle;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class AdventOfCode {
 
@@ -43,5 +42,6 @@ public class AdventOfCode {
 
         System.out.println("------------------------------");
         System.out.println("AdventOfCode day 03 part 1 : " + day3.nbInchSquareInConflict(puzzle.readInput(day3File)));
+        System.out.println("AdventOfCode day 03 part 2 : " + day3.findClaimWithoutConflict(puzzle.readInput(day3File)));
     }
 }
