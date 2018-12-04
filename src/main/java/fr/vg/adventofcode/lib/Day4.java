@@ -146,8 +146,7 @@ public class Day4 {
     public long calculateWorstAgentWithStrategyTwo(Stream<String> inputs) {
         Map<String, long[]> minutesByAgentId = sumNumberOfMinutesAsleepByAgent(inputs);
 
-        Pair<Long, Long> agentMinute = null;
-                minutesByAgentId.entrySet()
+        Optional<Pair<Long, Long>> agentMinute = minutesByAgentId.entrySet()
                 .stream()
                 .map(entry ->
                 {
@@ -162,9 +161,10 @@ public class Day4 {
                     }
                     return new Pair<Long, Pair<Long, Long>>(Long.valueOf(entry.getKey()), new Pair(Long.valueOf(index), Long.valueOf(bestValue)));
                 })
-                .sorted((t1,t2) -> t2.getValue().getValue().compareTo(t1.getValue().getValue()))
-                .forEach(x -> System.out.println(x));
+                .sorted((t1, t2) -> ((Pair<Long, Pair<Long, Long>>) t2).getValue().getValue().compareTo(((Pair<Long, Pair<Long, Long>>) t1).getValue().getValue()))
+                .findFirst()
+                .map(t -> new Pair(((Pair<Long, Pair<Long, Long>>) t).getKey(), ((Pair<Long, Pair<Long, Long>>) t).getValue().getKey()));
 
-        return agentMinute.getValue() * agentMinute.getKey();
+        return agentMinute.get().getValue() * agentMinute.get().getKey();
     }
 }
