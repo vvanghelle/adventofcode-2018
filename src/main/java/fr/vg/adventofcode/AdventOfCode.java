@@ -12,6 +12,7 @@ public class AdventOfCode {
         executeDay2(puzzle);
         executeDay3(puzzle);
         executeDay4(puzzle);
+        executeDay5(puzzle);
     }
 
     private static void executeDay1(Puzzle puzzle) throws Exception  {
@@ -50,5 +51,12 @@ public class AdventOfCode {
         System.out.println("------------------------------"  );
         System.out.println("AdventOfCode day 04 part 1 : " + day4.calculateWorstAgentWithStrategyOne(puzzle.readInput(day4File)));
         System.out.println("AdventOfCode day 04 part 2 : " + day4.calculateWorstAgentWithStrategyTwo(puzzle.readInput(day4File)));
+    }
+
+    private static void executeDay5(Puzzle puzzle) throws Exception  {
+        Day5 day5 = new Day5();
+        String day5File = "day5.txt";
+
+        System.out.println("------------------------------"  );
     }
 }
