@@ -1,9 +1,6 @@
 package fr.vg.adventofcode;
 
-import fr.vg.adventofcode.lib.Day1;
-import fr.vg.adventofcode.lib.Day2;
-import fr.vg.adventofcode.lib.Day3;
-import fr.vg.adventofcode.lib.Puzzle;
+import fr.vg.adventofcode.lib.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ public class AdventOfCode {
         executeDay1(puzzle);
         executeDay2(puzzle);
         executeDay3(puzzle);
+        executeDay4(puzzle);
     }
 
     private static void executeDay1(Puzzle puzzle) throws Exception  {
@@ -43,5 +41,12 @@ public class AdventOfCode {
         System.out.println("------------------------------");
         System.out.println("AdventOfCode day 03 part 1 : " + day3.nbInchSquareInConflict(puzzle.readInput(day3File)));
         System.out.println("AdventOfCode day 03 part 2 : " + day3.findClaimWithoutConflict(puzzle.readInput(day3File)));
+    }
+
+    private static void executeDay4(Puzzle puzzle) throws Exception  {
+        Day4 day4 = new Day4();
+        String day4File = "day4.txt";
+
+        System.out.println("------------------------------" + day4.parseAndSort(puzzle.readInput(day4File)));
     }
 }
