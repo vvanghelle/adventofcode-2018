@@ -47,6 +47,8 @@ public class AdventOfCode {
         Day4 day4 = new Day4();
         String day4File = "day4.txt";
 
-        System.out.println("------------------------------" + day4.parseAndSort(puzzle.readInput(day4File)));
+        System.out.println("------------------------------"  );
+        System.out.println("AdventOfCode day 04 part 1 : " + day4.calculateWorstAgentWithStrategyOne(puzzle.readInput(day4File)));
+        System.out.println("AdventOfCode day 04 part 2 : " + day4.calculateWorstAgentWithStrategyTwo(puzzle.readInput(day4File)));
     }
 }

@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  */import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * FIXME : Tests are for now only testing expected behavior. It does not tests Objects nullability & cie...
+ * Tests are for now only testing expected behavior. It does not tests Objects nullability & cie...
  */
 public class Day3Test {
 

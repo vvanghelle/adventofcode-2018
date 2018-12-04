@@ -1,13 +1,13 @@
 package fr.vg.adventofcode.lib;
 
-import java.security.cert.CollectionCertStoreParameters;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.vg.adventofcode.lib.day3.Claim.FABRIC_LENGTH;
 
 public class Day3 {
+
+    public static final int FABRIC_LENGTH = 1000;
 
     public List<String>[][] buildMap(Stream<String> inputs) {
         List<String>[][] values = new ArrayList[FABRIC_LENGTH][];
