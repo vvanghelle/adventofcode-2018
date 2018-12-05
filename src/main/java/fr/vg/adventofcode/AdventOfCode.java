@@ -58,5 +58,12 @@ public class AdventOfCode {
         String day5File = "day5.txt";
 
         System.out.println("------------------------------"  );
+        String polymerResult = day5.reactPolymer(puzzle.readInput(day5File).findFirst().get());
+        System.out.println("AdventOfCode day 05 part 1 : " + polymerResult) ;
+        System.out.println("AdventOfCode day 05 part 1 result : " + polymerResult.length());
+
+        String improvedPolymerResult = day5.improveAndReactPolymer(puzzle.readInput(day5File).findFirst().get());
+        System.out.println("AdventOfCode day 05 part 1 : " + improvedPolymerResult) ;
+        System.out.println("AdventOfCode day 05 part 1 result : " + improvedPolymerResult.length());
     }
 }
