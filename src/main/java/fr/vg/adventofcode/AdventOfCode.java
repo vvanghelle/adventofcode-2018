@@ -13,6 +13,7 @@ public class AdventOfCode {
         executeDay3(puzzle);
         executeDay4(puzzle);
         executeDay5(puzzle);
+        executeDay6(puzzle);
     }
 
     private static void executeDay1(Puzzle puzzle) throws Exception  {
@@ -65,5 +66,14 @@ public class AdventOfCode {
         String improvedPolymerResult = day5.improveAndReactPolymer(puzzle.readInput(day5File).findFirst().get());
         System.out.println("AdventOfCode day 05 part 1 : " + improvedPolymerResult) ;
         System.out.println("AdventOfCode day 05 part 1 result : " + improvedPolymerResult.length());
+    }
+
+    private static void executeDay6(Puzzle puzzle) throws Exception  {
+        Day6 day6 = new Day6();
+        String day6File = "day6.txt";
+
+        System.out.println("------------------------------"  );
+        String result = day6.doSomething(puzzle.readInput(day6File));
+        System.out.println("AdventOfCode day 05 part 1 : " + result) ;
     }
 }
