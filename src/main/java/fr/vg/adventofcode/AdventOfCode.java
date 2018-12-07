@@ -14,6 +14,7 @@ public class AdventOfCode {
         executeDay4(puzzle);
         executeDay5(puzzle);
         executeDay6(puzzle);
+        executeDay7(puzzle);
     }
 
     private static void executeDay1(Puzzle puzzle) throws Exception  {
@@ -64,8 +65,8 @@ public class AdventOfCode {
         System.out.println("AdventOfCode day 05 part 1 result : " + polymerResult.length());
 
         String improvedPolymerResult = day5.improveAndReactPolymer(puzzle.readInput(day5File).findFirst().get());
-        System.out.println("AdventOfCode day 05 part 1 : " + improvedPolymerResult) ;
-        System.out.println("AdventOfCode day 05 part 1 result : " + improvedPolymerResult.length());
+        System.out.println("AdventOfCode day 05 part 2 : " + improvedPolymerResult) ;
+        System.out.println("AdventOfCode day 05 part 2 result : " + improvedPolymerResult.length());
     }
 
     private static void executeDay6(Puzzle puzzle) throws Exception  {
@@ -74,6 +75,16 @@ public class AdventOfCode {
 
         System.out.println("------------------------------"  );
         System.out.println("AdventOfCode day 06 part 1 : " + day6.calculateBiggestAreaWithManhattanDistance(puzzle.readInput(day6File))) ;
-        System.out.println("AdventOfCode day 06 part 1 : " + day6.calculateBiggestAreaWithSumDistance(puzzle.readInput(day6File), 10000)) ;
+        System.out.println("AdventOfCode day 06 part 2 : " + day6.calculateBiggestAreaWithSumDistance(puzzle.readInput(day6File), 10000)) ;
+    }
+
+    private static void executeDay7(Puzzle puzzle) throws Exception  {
+        Day7 day7 = new Day7();
+        String day7File = "day7.txt";
+
+        System.out.println("------------------------------"  );
+        System.out.println("AdventOfCode day 07 part 1 : " + day7.buildGraphExecutionSequence(puzzle.readInput(day7File))) ;
+        System.out.println("AdventOfCode day 07 part 2 : " + day7.buildGraphExecutionSequenceWithWorkers(puzzle.readInput(day7File), 5, 60)) ;
+
     }
 }
