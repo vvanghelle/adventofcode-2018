@@ -3,7 +3,6 @@ package fr.vg.adventofcode.lib;
 
 import javafx.util.Pair;
 
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -33,8 +32,8 @@ public class Day6 {
             String[] coords = str.split(", ");
             return new Position(index.getAndIncrement(), Integer.valueOf(coords[0]), Integer.valueOf(coords[1]));
         }).collect(Collectors.toList());
-        int maxX = positions.stream().sorted((o1, o2) -> o2.x - o1.x).findFirst().get().x +1 ;
-        int maxY = positions.stream().sorted((o1, o2) -> o2.y - o1.y).findFirst().get().y +1 ;
+        int maxX = positions.stream().sorted((o1, o2) -> o2.x - o1.x).findFirst().get().x + 1;
+        int maxY = positions.stream().sorted((o1, o2) -> o2.y - o1.y).findFirst().get().y + 1;
 
         CharSequence[][] result = new CharSequence[maxX + 1][];
         for (int i = 0; i < maxX + 1; i++) {
@@ -96,7 +95,7 @@ public class Day6 {
     }
 
 
-    public Integer calculateBiggestArea(Stream<String> readInput) {
+    public Integer calculateBiggestAreaWithManhattanDistance(Stream<String> readInput) {
         CharSequence[][] map = buildManhattanDistance(readInput);
         Set<CharSequence> outsiderChars = new HashSet<>();
         for (int i = 0; i < map.length; i++) {
@@ -107,8 +106,8 @@ public class Day6 {
             }
         }
         Map<String, Integer> charOccurence = new HashMap<>();
-        for (int i = 0; i < map.length ; i++) {
-            for (int j = 0; j < map[i].length ; j++) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
                 if (!outsiderChars.contains(map[i][j].toString().toLowerCase())) {
                     Integer nbOccurence = charOccurence.get(map[i][j].toString().toLowerCase());
                     if (nbOccurence == null)
@@ -122,16 +121,68 @@ public class Day6 {
         return charOccurence.entrySet().stream().sorted((o1, o2) -> o2.getValue() - o1.getValue()).findFirst().get().getValue();
     }
 
+    /*
+    builds this map with adding the distances to points, and verifying they are less than a certain number :
+
+..........
+.A........
+..........
+...###..C.
+..#D###...
+..###E#...
+.B.###....
+..........
+..........
+........F.
+     */
+    public CharSequence[][] buildDistanceSum(Stream<String> readInput, int maxDistanceSum) {
+        CharSequence[][] map = buildMap(readInput);
+
+        List<Position> positions = Arrays.stream(map)
+                .map(arr -> Arrays.stream(arr)
+                        .filter(x -> x instanceof Position)
+                        .map(x -> (Position) x)
+                        .collect(Collectors.toList()))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                List<Pair<Integer, Position>> distances = calculateDistancesWithPoints(i, j, positions);
+                int sumDistance = distances.stream().map(Pair::getKey).mapToInt(k -> k).sum();
+                if (sumDistance < maxDistanceSum) {
+                    map[i][j] = "#";
+                }
+            }
+        }
+        return map;
+    }
+
+    public Long calculateBiggestAreaWithSumDistance(Stream<String> readInput, int maxDistance) {
+        CharSequence[][] map = buildDistanceSum(readInput, maxDistance);
+
+        long sumOfSafePoints = Arrays.stream(map)
+                .map(arr -> Arrays.stream(arr)
+                        .filter(x -> x.toString().equals("#"))
+                        .collect(Collectors.toList()))
+                .flatMap(List::stream)
+                .count();
+
+        return sumOfSafePoints;
+    }
+
+
+
     public static class Position implements CharSequence {
         public final String representation;
         public final int x;
         public final int y;
 
         public Position(int position, int x, int y) {
-            char ch = 'A';
+            char ch;
             int pos = position;
             String s = "";
-            while (pos >= 0 ){
+            while (pos >= 0) {
                 int min = Math.min(pos, 25);
                 ch = (char) ('A' + min);
                 s += ch;
@@ -139,8 +190,8 @@ public class Day6 {
                 if (min == 0)
                     break;
             }
-            ch += position;
             representation = s;
+
             this.x = x;
             this.y = y;
         }

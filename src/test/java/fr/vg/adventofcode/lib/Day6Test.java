@@ -4,7 +4,6 @@ package fr.vg.adventofcode.lib;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,8 +36,20 @@ public class Day6Test {
 
     @Test
     public void testCalculateBiggestArea() {
-        Integer result = day6.calculateBiggestArea(Stream.of("1, 1", "1, 6", "8, 3", "3, 4", "5, 5", "8, 9"));
+        Integer result = day6.calculateBiggestAreaWithManhattanDistance(Stream.of("1, 1", "1, 6", "8, 3", "3, 4", "5, 5", "8, 9"));
         assertEquals(17, result.intValue());
+    }
+
+    @Test
+    public void testBuildSumDistance() {
+        CharSequence[][] result = day6.buildDistanceSum(Stream.of("1, 1", "1, 6", "8, 3", "3, 4", "5, 5", "8, 9"), 32);
+        printResult(result);
+    }
+
+    @Test
+    public void testCalculateSafestArea() {
+        Long result = day6.calculateBiggestAreaWithSumDistance(Stream.of("1, 1", "1, 6", "8, 3", "3, 4", "5, 5", "8, 9"), 32);
+        assertEquals(16, result.intValue());
     }
 
     private void printResult(CharSequence[][] result) {
