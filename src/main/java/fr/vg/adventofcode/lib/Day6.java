@@ -1,7 +1,10 @@
 package fr.vg.adventofcode.lib;
 
 
-import java.util.List;
+import javafx.util.Pair;
+
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,14 +33,9 @@ public class Day6 {
             String[] coords = str.split(", ");
             return new Position(index.getAndIncrement(), Integer.valueOf(coords[0]), Integer.valueOf(coords[1]));
         }).collect(Collectors.toList());
-        int maxX = 0;
-        int maxY = 0;
-        for (Position p : positions) {
-            if (p.x > maxX)
-                maxX = p.x;
-            if (p.y > maxY)
-                maxY = p.y;
-        }
+        int maxX = positions.stream().sorted((o1, o2) -> o2.x - o1.x).findFirst().get().x +1 ;
+        int maxY = positions.stream().sorted((o1, o2) -> o2.y - o1.y).findFirst().get().y +1 ;
+
         CharSequence[][] result = new CharSequence[maxX + 1][];
         for (int i = 0; i < maxX + 1; i++) {
             result[i] = new CharSequence[maxY + 1];
@@ -53,74 +51,75 @@ public class Day6 {
     }
 
     /*
-    FIXME WONT WORK :
-
-result :
---------c
--A-------
----------
---------C
----D-----
------E---
--B-------
----------
----------
-b-------F
-
+    complete with low
+    aaaaa.ccc
+    aAaaa.ccc
+    aaaddeccc
+    aadddeccC
+    ..dDdeecc
+    bb.deEeec
+    bBb.eeee.
+    bbb.eeeff
+    bbb.eefff
+    bbb.ffffF
      */
     public CharSequence[][] buildManhattanDistance(Stream<String> readInput) {
         CharSequence[][] map = buildMap(readInput);
-        boolean hasProcessedForTurn = true;
-        int offset = 1;
-        while (hasProcessedForTurn) {
-            hasProcessedForTurn = false;
-            for (int i = 0; i < map.length; i++) {
-                for (int j = 0; j < map[i].length; j++) {
-                    if (processManhanttanDistance(map, i, j, offset)) {
-                        hasProcessedForTurn = true;
+
+        List<Position> positions = Arrays.stream(map)
+                .map(arr -> Arrays.stream(arr)
+                        .filter(x -> x instanceof Position)
+                        .map(x -> (Position) x)
+                        .collect(Collectors.toList()))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (!(map[i][j] instanceof Position)) {
+                    List<Pair<Integer, Position>> distances = calculateDistancesWithPoints(i, j, positions);
+                    int minDistance = distances.stream().sorted(Comparator.comparingInt(Pair::getKey)).findFirst().get().getKey();
+                    List<Pair<Integer, Position>> nearestPoints = distances.stream().filter(d -> d.getKey().equals(minDistance)).collect(Collectors.toList());
+                    if (nearestPoints.size() == 1) {
+                        map[i][j] = nearestPoints.get(0).getValue().representation.toLowerCase();
                     }
                 }
             }
-            offset++;
         }
         return map;
     }
 
-    private boolean processManhanttanDistance(CharSequence[][] map, int i, int j, int offset) {
-        boolean hasModified = false;
-        if (map[i][j] instanceof Position) {
-            for (int i2 = i - offset; i2 <= i + offset; i2++) {
-                for (int j2 = j - offset; j2 <= j + offset; j2++) {
-                    if (i2 == i - offset || i2 == i + offset || j2 == j - offset || j2 == j + offset) {
-                        hasModified = hasModified | fillPositionWithOccupation(map, i2, j2, (Position) map[i][j]);
+    private List<Pair<Integer, Position>> calculateDistancesWithPoints(int i, int j, List<Position> positions) {
+        return positions.stream()
+                .map(p -> new Pair<>(Math.abs(i - p.x) + Math.abs(j - p.y), p))
+                .collect(Collectors.toList());
+    }
+
+
+    public Integer calculateBiggestArea(Stream<String> readInput) {
+        CharSequence[][] map = buildManhattanDistance(readInput);
+        Set<CharSequence> outsiderChars = new HashSet<>();
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (i == 0 || i == map.length - 1 || j == 0 || j == map[i].length - 1) {
+                    outsiderChars.add(map[i][j].toString().toLowerCase());
+                }
+            }
+        }
+        Map<String, Integer> charOccurence = new HashMap<>();
+        for (int i = 0; i < map.length ; i++) {
+            for (int j = 0; j < map[i].length ; j++) {
+                if (!outsiderChars.contains(map[i][j].toString().toLowerCase())) {
+                    Integer nbOccurence = charOccurence.get(map[i][j].toString().toLowerCase());
+                    if (nbOccurence == null)
+                        charOccurence.put(map[i][j].toString().toLowerCase(), 1);
+                    else {
+                        charOccurence.put(map[i][j].toString().toLowerCase(), ++nbOccurence);
                     }
                 }
             }
-
         }
-        return hasModified;
-    }
-
-    private boolean fillPositionWithOccupation(CharSequence[][] map, int i, int j, Position position) {
-        try {
-
-            String charAtPosition = map[i][j].toString();
-            if (charAtPosition.equals(".")) {
-                // empty space
-                map[i][j] = position.toString().toLowerCase();
-                return true;
-            }
-            if (charAtPosition.charAt(0) >= 'a') {
-                map[i][j] = "-";
-            }
-        } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-
-        }
-        return false;
-    }
-
-    public String doSomething(Stream<String> readInput) {
-        return null;
+        return charOccurence.entrySet().stream().sorted((o1, o2) -> o2.getValue() - o1.getValue()).findFirst().get().getValue();
     }
 
     public static class Position implements CharSequence {
@@ -130,8 +129,18 @@ b-------F
 
         public Position(int position, int x, int y) {
             char ch = 'A';
+            int pos = position;
+            String s = "";
+            while (pos >= 0 ){
+                int min = Math.min(pos, 25);
+                ch = (char) ('A' + min);
+                s += ch;
+                pos -= min;
+                if (min == 0)
+                    break;
+            }
             ch += position;
-            representation = String.valueOf(ch);
+            representation = s;
             this.x = x;
             this.y = y;
         }

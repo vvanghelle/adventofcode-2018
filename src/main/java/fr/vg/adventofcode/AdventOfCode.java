@@ -73,7 +73,6 @@ public class AdventOfCode {
         String day6File = "day6.txt";
 
         System.out.println("------------------------------"  );
-        String result = day6.doSomething(puzzle.readInput(day6File));
-        System.out.println("AdventOfCode day 05 part 1 : " + result) ;
+        System.out.println("AdventOfCode day 06 part 1 : " + day6.calculateBiggestArea(puzzle.readInput(day6File))) ;
     }
 }
