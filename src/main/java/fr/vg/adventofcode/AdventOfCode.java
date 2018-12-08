@@ -15,6 +15,7 @@ public class AdventOfCode {
         executeDay5(puzzle);
         executeDay6(puzzle);
         executeDay7(puzzle);
+        executeDay8(puzzle);
     }
 
     private static void executeDay1(Puzzle puzzle) throws Exception  {
@@ -87,4 +88,15 @@ public class AdventOfCode {
         System.out.println("AdventOfCode day 07 part 2 : " + day7.buildGraphExecutionSequenceWithWorkers(puzzle.readInput(day7File), 5, 60)) ;
 
     }
+
+    private static void executeDay8(Puzzle puzzle) throws Exception  {
+        Day8 day8 = new Day8();
+        String day8File = "day8.txt";
+
+        System.out.println("------------------------------"  );
+        System.out.println("AdventOfCode day 08 part 1 : " + day8.buildGraphAndSumMetadata(puzzle.readInput(day8File).findFirst().get())) ;
+        System.out.println("AdventOfCode day 08 part 2 : " + day8.buildGraphAndCalculateRootNodeValue(puzzle.readInput(day8File).findFirst().get())) ;
+
+    }
+
 }

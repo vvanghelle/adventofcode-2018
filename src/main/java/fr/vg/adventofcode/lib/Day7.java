@@ -10,9 +10,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * FIXME code and test are visuals... rework this uggly and shitty code...
- */
 public class Day7 {
 
     public List<Step> buildInstructionGraph(Stream<String> readInput) {
